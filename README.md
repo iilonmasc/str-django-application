@@ -47,3 +47,23 @@ $ python manage.py migrate
 $ python manage.py runserver
 
 ```
+
+## Environment variables
+
+| Name | Description | Default |
+| ---- | ----------- | ------- |
+| *DJANGO_DB_HOST* | Hostname of database server | localhost |
+| *DJANGO_DB_PORT* | Port for database server | 5432 |
+| *DJANGO_DB_USER* | Username to connect to database | empty string |
+| *DJANGO_DB_PASS* | Password for database authentication | empty string |
+
+In a terminal you can set an environment variable via `export` e.g.
+
+```bash
+# Set database hostname (or IP)
+$ export DJANGO_DB_HOST="192.168.0.20"
+
+# Set database port
+$ export DJANGO_DB_PORT="35432"
+```
+
