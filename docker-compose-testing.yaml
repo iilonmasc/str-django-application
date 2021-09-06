@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+    db:
+        image: postgres:13.4-alpine
+        environment:
+            PGDATA: /data/postgres
+            POSTGRES_USER: django
+            POSTGRES_PASSWORD: ${DOCKER_POSTGRES_PASS}
+        ports:
+            - 5432:5432
+
+    test_runner:
+        build:
+            context: .
+        depends_on:
+            - db
+        environment:
+            DJANGO_DB_HOST: db
+            DJANGO_DB_PASS: ${DOCKER_POSTGRES_PASS}
+            DJANGO_DB_USER: django
+            DJANGO_TESTING: "true"

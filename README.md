@@ -17,6 +17,8 @@ $ export DOCKER_POSTGRES_PASS="mysupersecretpassword"
 $ docker-compose up
 ```
 
+The application container will wait for 5 seconds, since postgres takes a short time for the process to accept new connections.
+
 ## Setup using virtual env and Postgres
 
 ### Prepare virtual environment
@@ -81,3 +83,10 @@ $ export DJANGO_DB_HOST="192.168.0.20"
 $ export DJANGO_DB_PORT="35432"
 ```
 
+## Running tests
+
+To run the tests, you can execute the bash script called `run_tests.sh`
+
+It will use `docker-compose` to run the services specified in `docker-compose-testing.yaml`
+
+The test-runner container will wait for 5 seconds, since postgres takes a short time for the process to accept new connections.
