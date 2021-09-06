@@ -2,8 +2,22 @@
 
 small demo application for managing user accounts using django
 
-## Setup using virtual env and Postgres
+## Setup through docker-compose
 
+If you have `docker-compose` installed you can simply start the environment through docker.
+
+In this case, you **need** to set the env variable `DOCKER_POSTGRES_PASS` to provide a password to the Postgres database and the django application.
+
+```bash
+
+# set the password for postgres and django
+$ export DOCKER_POSTGRES_PASS="mysupersecretpassword"
+
+# start the containers
+$ docker-compose up
+```
+
+## Setup using virtual env and Postgres
 
 ### Prepare virtual environment
 
