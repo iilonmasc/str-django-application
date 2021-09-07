@@ -2,6 +2,7 @@ from django.contrib import admin
 from django import forms
 import pycountry
 import string
+from django.contrib.auth.decorators import login_required
 
 from .models import UserAccount
 
@@ -55,4 +56,6 @@ class UserAccountAdmin(admin.ModelAdmin):
     form = UserAccountForm
     fields = ['first_name', 'last_name', 'iban']
 
+
+admin.site.login = login_required(admin.site.login)
 admin.site.register(UserAccount, UserAccountAdmin)

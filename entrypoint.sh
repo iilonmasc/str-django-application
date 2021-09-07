@@ -2,6 +2,7 @@
 
 echo "Waiting for 5 seconds for postgres to start"
 sleep 5
+python3 manage.py makemigrations
 python3 manage.py migrate
 if [ "${DJANGO_TESTING}"="true" ]; then
     echo "DJANGO_TESTING is set to true, starting tests"

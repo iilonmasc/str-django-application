@@ -19,6 +19,8 @@ services:
             DJANGO_DB_HOST: db
             DJANGO_DB_PASS: ${DOCKER_POSTGRES_PASS}
             DJANGO_DB_USER: django
+            DJANGO_SSO_CLIENT_ID: ${DJANGO_SSO_CLIENT_ID}
+            DJANGO_SSO_CLIENT_SECRET: ${DJANGO_SSO_CLIENT_SECRET}
         ports:
             - 8000:8000
         restart: always

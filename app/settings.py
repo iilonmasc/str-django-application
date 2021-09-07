@@ -39,6 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -82,7 +87,7 @@ DATABASES = {
         'HOST': os.getenv('DJANGO_DB_HOST', 'localhost'),
         'PORT': os.getenv('DJANGO_DB_PORT', '5432'),
         'USER': os.getenv('DJANGO_DB_USER', ''),
-        'PASSWORD': os.getenv('DJANGO_DB_PASS', '')
+        'PASSWORD': os.getenv('DJANGO_DB_PASS', ''),
     }
 }
 
@@ -129,3 +134,20 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SITE_ID = 1
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'APP': {
+            'client_id': os.getenv('DJANGO_SSO_CLIENT_ID'),
+            'secret': os.getenv('DJANGO_SSO_CLIENT_SECRET'),
+            'key': ''
+        }
+    }
+}
+LOGIN_REDIRECT_URL='/admin'
+SOCIALACCOUNT_ADAPTER="app.adapter.ElevatePrivilegesAdapter"
