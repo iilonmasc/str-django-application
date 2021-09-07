@@ -3,6 +3,7 @@ from django import forms
 import pycountry
 import string
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 from .models import UserAccount
 
@@ -14,6 +15,13 @@ class UserAccountForm(forms.ModelForm):
         model = UserAccount
         fields = ['first_name', 'last_name', 'iban']
 
+    def change_requested_by_author(self, userdata):
+        """Returns true if the current logged in user is the author of this object
+        """
+        current_useraccount = UserAccount.objects.get(id=self.object_id) if self.object_id else None
+        if current_useraccount and current_useraccount.user != self.current_user:
+            raise forms.ValidationError("Current User is not allowed to change this account!")
+        return True
     def iban_is_valid(self, iban):
         """Returns True if IBAN is valid
 
@@ -43,11 +51,11 @@ class UserAccountForm(forms.ModelForm):
 
     def clean(self):
         """Clean form data, strip whitespaces from IBAN"""
-
         iban = self.cleaned_data.get('iban').replace(' ', '')
-        if self.iban_is_valid(iban):
-            self.cleaned_data['iban'] = iban
-        return self.cleaned_data
+        self.cleaned_data['iban'] = iban
+        if self.change_requested_by_author(self.cleaned_data):
+            if self.iban_is_valid(iban):
+                return self.cleaned_data
         
             
 
@@ -55,6 +63,23 @@ class UserAccountAdmin(admin.ModelAdmin):
     """ModelAdmin needed to display UserAccountForm in django-admin"""
     form = UserAccountForm
     fields = ['first_name', 'last_name', 'iban']
+    def get_form(self, request, obj=None, **kwargs):
+        """Appends current logged in user to form"""
+        
+        form = super().get_form(request, obj, **kwargs)
+        form.object_id = obj.id if obj else None
+        form.current_user = request.user
+        return form 
+    
+    def save_model(self, request, obj, form, change):
+        """Override save_model() to add current logged on user"""
+        obj.user = request.user
+        super().save_model(request, obj, form, change)
+    def delete_model(self, request, obj):
+        if obj.user == request.user:
+            super().delete_model(request, obj)
+        else:
+            raise forms.ValidationError('You are not allowed to delete this object')
 
 
 admin.site.login = login_required(admin.site.login)
